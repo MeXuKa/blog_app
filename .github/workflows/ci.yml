@@ -7,7 +7,7 @@ on:
 
 jobs:
   test:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     services:
       mongodb:
@@ -27,6 +27,9 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+
+      - name: Set environment variable for MongoDB URI
+        run: echo "MONGODB_URI=mongodb://localhost:27017/blogApp" >> $GITHUB_ENV
 
       - name: Build the project
         run: npm run build
