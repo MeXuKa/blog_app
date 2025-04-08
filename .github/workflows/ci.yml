@@ -40,8 +40,12 @@ jobs:
           echo "  login ${{ secrets.HEROKU_EMAIL }}" >> ~/.netrc
           echo "  password ${{ secrets.HEROKU_API_KEY }}" >> ~/.netrc
 
+      - name: Pull from Heroku before pushing changes
+        run: |
+          git remote add heroku https://git.heroku.com/${{ secrets.HEROKU_APP_NAME }}.git
+          git pull heroku main || true  # Pobiera zmiany z Heroku, jeśli istnieją
+
       - name: Deploy to Heroku
         run: |
           echo "Deploying to Heroku"
-          git remote add heroku https://git.heroku.com/${{ secrets.HEROKU_APP_NAME }}.git
           git push heroku main
