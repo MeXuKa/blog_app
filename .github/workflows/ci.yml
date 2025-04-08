@@ -40,13 +40,8 @@ jobs:
           echo "  login ${{ secrets.HEROKU_EMAIL }}" >> ~/.netrc
           echo "  password ${{ secrets.HEROKU_API_KEY }}" >> ~/.netrc
 
-      - name: Pull from Heroku before pushing changes
-        run: |
-          git remote add heroku https://git.heroku.com/${{ secrets.HEROKU_APP_NAME }}.git
-          git fetch heroku
-          git rebase heroku/main  # Zamiast git pull, używamy git rebase, aby zachować porządek
-
       - name: Deploy to Heroku
         run: |
           echo "Deploying to Heroku"
+          git remote add heroku https://git.heroku.com/simple-blog-app.git
           git push heroku main
