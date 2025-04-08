@@ -30,9 +30,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      # Instalacja Heroku CLI
+      - name: Install Heroku CLI
+        run: |
+          curl https://cli-assets.heroku.com/install.sh | sh
+
       - name: Deploy to Heroku
         uses: akhileshns/heroku-deploy@v3.12.12
         with:
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
           heroku_app_name: "simple-blog-app"
-          
+          heroku_email: "max.mb.borowski@gmail.com"
