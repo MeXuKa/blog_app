@@ -43,7 +43,8 @@ jobs:
       - name: Pull from Heroku before pushing changes
         run: |
           git remote add heroku https://git.heroku.com/${{ secrets.HEROKU_APP_NAME }}.git
-          git pull heroku main || true  # Pobiera zmiany z Heroku, jeśli istnieją
+          git fetch heroku
+          git rebase heroku/main  # Zamiast git pull, używamy git rebase, aby zachować porządek
 
       - name: Deploy to Heroku
         run: |
