@@ -31,15 +31,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up Heroku API key
-        run: |
-          echo "Setting up Heroku API key"
-          echo "${{ secrets.HEROKU_API_KEY }}" > ~/.netrc
-
       - name: Deploy to Heroku
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         run: |
           echo "Deploying to Heroku"
-          git remote add heroku https://git.heroku.com/${{ secrets.HEROKU_APP_NAME }}.git
+          git remote add heroku https://git.heroku.com/simple-blog-app.git
           git push heroku main
