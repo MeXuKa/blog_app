@@ -31,11 +31,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Log in to Heroku
+      - name: Set up Heroku API key
         run: |
-          echo "Logging in to Heroku"
-          curl https://cli-assets.heroku.com/install.sh | sh
-          heroku login -i <<< "${{ secrets.HEROKU_API_KEY }}"
+          echo "Setting up Heroku API key"
+          echo "${{ secrets.HEROKU_API_KEY }}" > ~/.netrc
 
       - name: Deploy to Heroku
         env:
