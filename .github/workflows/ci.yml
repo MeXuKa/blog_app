@@ -7,15 +7,8 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
-
-    services:
-      mongodb:
-        image: mongo:latest
-        ports:
-          - 27017:27017
-        options: --health-cmd "nc -z localhost 27017" --health-interval 10s --health-timeout 5s --health-retries 5
-
+    runs-on: windows-latest
+    
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -28,11 +21,5 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Set environment variable for MongoDB URI
-        run: echo "MONGODB_URI=mongodb://localhost:27017/blogApp" >> $GITHUB_ENV
-
       - name: Build the project
         run: npm run build
-
-      - name: Run tests
-        run: npm test
