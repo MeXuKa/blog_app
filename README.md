@@ -60,13 +60,13 @@ npm test
 This project includes a **CI/CD pipeline** (GitHub Actions) that automatically:
 
 - builds the app
-- deploys the app to Heroku (You need to set **HEROKU_API_KEY** and **HEROKU_APP_NAME** in your repository)
+- deploys the app to Heroku (You need to set **HEROKU_API_KEY**, **HEROKU_APP_NAME** and **HEROKU_EMAIL** in your repository)
 
 ---
 
 ## 📓 Logging
 
-The app uses a **logging system** (Winston). You can check app events and errors in **logs/** directory
+The app uses a **logging system** (Winston). You can check app events and errors in **logs/** directory.
 
 ---
 
