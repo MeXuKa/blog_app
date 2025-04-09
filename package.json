@@ -5,8 +5,8 @@
   "main": "app.js",
   "scripts": {
     "start": "node ./dist/app.js",
-    "build": "tsc",
     "dev": "concurrently \"tsc --watch\" \"nodemon ./dist/app.js\"",
+    "build": "tsc",
     "test": "mocha"
   },
   "keywords": [],
