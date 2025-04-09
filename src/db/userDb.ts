@@ -26,6 +26,15 @@ export const createUserDb = async (username: string, email: string, password: st
     return await User.create({ username, password, email});
 }
 
+export const checkUserDb = async (email: string, password: string) => {
+    const user = await User.findOne({ email });
+
+    if (!user) return;
+    if (user.password !== password) return;
+    
+    return user;
+}
+
 export const updateUserDb = async (id: string, data: Partial<UserInterface>) => {
     return await User.findByIdAndUpdate(id, data, { new: true }).explain('executionStats');
 }

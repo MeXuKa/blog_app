@@ -11,6 +11,7 @@ An early version of a backend-only **Blog App**, built with **Express**, **TypeS
 - **MongoDB/Mongoose**
 - **Mocha/Chai**
 - **Winston**
+- **JsonWebToken**
 
 ---
 
@@ -34,7 +35,9 @@ npm install
 ```env
 PORT=3000
 MONGODB_URI="mongodb://localhost:27017/blog-db"
+SECRET_SIGN="secret_sign"
 ```
+
 4. Run the development server:
 
 ```bash

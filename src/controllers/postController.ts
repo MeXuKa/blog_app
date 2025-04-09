@@ -14,22 +14,29 @@ export const getPostsController = async (req: Request, res: Response, next: Next
     }
 }
 
-export const getPostController  = async (req: Request, res: Response, next: NextFunction) => {
+export const getPostController = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const id = req.params.id;
-        const post = await getPostDb(id);
+        const { decodedToken } = req as any;
 
-        logger.info(`Udało się zwrócić posta o id ${id}`);
+        if (!decodedToken) return;
+
+        const post = await getPostDb(decodedToken.userId);
+
+        logger.info(`Udało się zwrócić posta o id ${decodedToken.userId}`);
         res.status(200).json(post);
     } catch (err) {
         next(err);
     }
 }
 
-export const createPostController  = async (req: Request, res: Response, next: NextFunction) => {
+export const createPostController = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { title, body, userId } = req.body;
-        const post = await createPostDb(title, body, userId);
+        const { decodedToken } = req as any;
+
+        if (!decodedToken) return;
+
+        const { title, body } = req.body;
+        const post = await createPostDb(title, body, decodedToken.userId);
 
         logger.info(`Udało się stworzyć posta`);
         res.status(201).json(post);
@@ -38,26 +45,32 @@ export const createPostController  = async (req: Request, res: Response, next: N
     }
 }
 
-export const updatePostController  = async (req: Request, res: Response, next: NextFunction) => {
+export const updatePostController = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const id = req.params.id;
-        const data = req.body;
-        const post = await updatePostDb(id, data);
+        const { decodedToken } = req as any;
 
-        logger.info(`Udało się zaktualizować posta o id ${id}`);
+        if (!decodedToken) return;
+
+        const data = req.body;
+        const post = await updatePostDb(decodedToken.userId, data);
+
+        logger.info(`Udało się zaktualizować posta o id ${decodedToken.userId}`);
         res.status(200).json(post);
     } catch (err) {
         next(err);
     }
 }
 
-export const deletePostController  = async (req: Request, res: Response, next: NextFunction) => {
+export const deletePostController = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const id = req.params.id;
-        await deletePostDb(id);
+        const { decodedToken } = req as any;
 
-        logger.info(`Udało się usunąć posta o id ${id}`);
-        res.status(200).json({ message: `Post o id ${id} został usunięty` });
+        if (!decodedToken) return;
+
+        await deletePostDb(decodedToken.userId);
+
+        logger.info(`Udało się usunąć posta o id ${decodedToken.userId}`);
+        res.status(200).json({ message: `Post o id ${decodedToken.userId} został usunięty` });
     } catch (err) {
         next(err);
     }

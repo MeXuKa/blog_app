@@ -2,11 +2,11 @@
   "name": "blog_app",
   "version": "1.0.0",
   "description": "Blog App",
-  "main": "app.js",
+  "main": "dist/app.js",
   "scripts": {
-    "start": "node ./dist/app.js",
-    "dev": "concurrently \"tsc --watch\" \"nodemon ./dist/app.js\"",
     "build": "tsc",
+    "start": "node ./dist/app.js",
+    "dev": "concurrently \"tsc --watch\" \"node --watch ./dist/app.js\"",
     "test": "mocha"
   },
   "keywords": [],
@@ -17,17 +17,22 @@
     "@sentry/node": "^9.11.0",
     "dotenv": "^16.4.7",
     "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.13.2",
     "winston": "^3.17.0"
   },
   "devDependencies": {
+    "@types/chai": "^5.2.1",
     "@types/express": "^5.0.1",
+    "@types/jsonwebtoken": "^9.0.9",
+    "@types/mocha": "^10.0.10",
     "@types/mongoose": "^5.11.96",
+    "@types/sinon": "^17.0.4",
+    "@types/supertest": "^6.0.3",
     "chai": "^5.2.0",
     "clinic": "^13.0.0",
     "concurrently": "^9.1.2",
     "mocha": "^11.1.0",
-    "nodemon": "^3.1.9",
     "sinon": "^20.0.0",
     "supertest": "^7.1.0",
     "typescript": "^5.8.3"

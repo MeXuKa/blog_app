@@ -8,9 +8,14 @@ export const userErrorHandler = (err: any, req: Request, res: Response, next: Ne
     const status = err.status || 500;
 
     if (status === 400) {
-        res.status(400).json({ error: 'Błędne dane wejściowe' });
+        res.status(400).json({ error: 'Brak danych wejściowych' });
         return;
     } 
+    if (status === 401) {
+        res.status(401).json({ error: 'Błędne dane wejściowe' });
+        return;
+    }
+
     if (status === 404) {
         res.status(404).json({ error: 'Użytkownik nie znaleziony' });
         return;
@@ -31,7 +36,7 @@ export const postErrorHandler = (err: any, req: Request, res: Response, next: Ne
     const status = err.status || 500;
 
     if (status === 400) {
-        res.status(400).json({ error: 'Błędne dane wejściowe' });
+        res.status(400).json({ error: 'Brak danych wejściowych' });
         return;
     } 
     if (status === 404) {

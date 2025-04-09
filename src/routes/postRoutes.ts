@@ -1,16 +1,17 @@
 import { Router } from 'express';
 import { getPostsController, getPostController, createPostController, updatePostController, deletePostController } from '../controllers/postController.js'; 
+import { verifyToken } from '../middlewares/jwt.js';
 
 const router = Router();
 
-router.get('', getPostsController );
+router.get('', verifyToken, getPostsController );
 
-router.get('/:id', getPostController );
+router.get('/:id', verifyToken, getPostController );
 
-router.post('', createPostController);
+router.post('', verifyToken, createPostController);
 
-router.put('/:id', updatePostController);
+router.put('/:id', verifyToken, updatePostController);
 
-router.delete('/:id', deletePostController);
+router.delete('/:id', verifyToken, deletePostController);
 
 export default router;
