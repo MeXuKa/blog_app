@@ -1,18 +1,4 @@
-import mongoose, { Document, Schema } from 'mongoose';
-
-interface UserInterface extends Document {
-    username: string,
-    email: string,
-    password: string
-}
-
-const userSchema = new mongoose.Schema<UserInterface>({
-    username: { type: String, required: true, unique: true },
-    email: { type: String, match: [/\S+@\S+\.\S+/, 'Proszę wprowadzić poprawny adres e-mail'], required: true, unique: true },
-    password: { type: String, required: true },
-});
-
-export const User = mongoose.model<UserInterface>('User', userSchema);
+import { User, UserInterface } from '../models/userModel.js';
 
 export const getUsersDb = async () => {
     return await User.find().explain('executionStats');

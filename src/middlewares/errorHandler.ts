@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import logger from '../logger.js';
+import logger from '../utils/logger.js';
 
 export const userErrorHandler = (err: any, req: Request, res: Response, next: NextFunction): void => {
     if (!err.route || !err.route.includes('/users')) return next(err);
@@ -8,16 +8,16 @@ export const userErrorHandler = (err: any, req: Request, res: Response, next: Ne
     const status = err.status || 500;
 
     if (status === 400) {
-        res.status(400).json({ error: 'Brak danych wejściowych' });
+        res.status(400).json({ error: 'Missing input data' });
         return;
     } 
     if (status === 401) {
-        res.status(401).json({ error: 'Błędne dane wejściowe' });
+        res.status(401).json({ error: 'Invalid input data' });
         return;
     }
 
     if (status === 404) {
-        res.status(404).json({ error: 'Użytkownik nie znaleziony' });
+        res.status(404).json({ error: 'User not found' });
         return;
     }
     
@@ -36,16 +36,16 @@ export const postErrorHandler = (err: any, req: Request, res: Response, next: Ne
     const status = err.status || 500;
 
     if (status === 400) {
-        res.status(400).json({ error: 'Brak danych wejściowych' });
+        res.status(400).json({ error: 'Missing input data' });
         return;
     } 
     if (status === 404) {
-        res.status(404).json({ error: 'Post nie znaleziony' });
+        res.status(404).json({ error: 'Post not found' });
         return;
     }
     
     if (status === 500) {
-        res.status(500).json({ error: 'Błąd serwera, ponów prośbę później' });
+        res.status(500).json({ error: 'Server error, please try again later' });
         return;
     }
 
@@ -56,5 +56,5 @@ export const globalErrorHandler = (err: any, req: Request, res: Response, next: 
     logger.error(`${err.message}`);
     const status = err.status || 500;
 
-    res.status(status).json({ error: 'Nieoczekiwany błąd' });
+    res.status(status).json({ error: 'Unexpected error' });
 }

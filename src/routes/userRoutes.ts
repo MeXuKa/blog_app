@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { getUsersController, getUserController, createUserController, checkUserController, updateUserController, deleteUserController } from '../controllers/userController.js';
-import { verifyToken } from '../middlewares/jwt.js';
+import { verifyToken } from '../middlewares/jwtHandler.js';
 
 const router = Router();
 

@@ -1,14 +1,14 @@
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import { Request, Response, NextFunction } from 'express';
-import logger from '../logger.js';
+import logger from '../utils/logger.js';
 
 dotenv.config();
 
 const SECRET_SIGN = process.env.SECRET_SIGN;
 
 if (!SECRET_SIGN) {
-    logger.error('Brak podpisu uwierzytelniającego');
+    logger.error('Missing authentication token');
     process.exit(1);
 }
 

@@ -1,6 +1,6 @@
 import * as Sentry from '@sentry/node';
 import express from 'express';
-import dbConnect from './db/db.js'; 
+import connectDB from './config/connectDB.js'; 
 import dotenv from 'dotenv';
 import cluster from 'cluster';
 import os from 'os';
@@ -9,7 +9,7 @@ import path from 'path';
 import userRoutes from './routes/userRoutes.js';
 import postRoutes from './routes/postRoutes.js';
 import { userErrorHandler, postErrorHandler, globalErrorHandler } from './middlewares/errorHandler.js';
-import logger from './logger.js';
+import logger from './utils/logger.js';
 
 if (cluster.isPrimary) {
     const numCpus = os.cpus().length;
@@ -19,22 +19,20 @@ if (cluster.isPrimary) {
     }
 
     cluster.on('exit', (worker, code, signal) => {
-        logger.info(`Worker o id ${worker.process.pid} zakończony`);
+        logger.info(`Worker with id ${worker.process.pid} exited with code ${code} and signal ${signal}`);
         cluster.fork();
     });
 } else {
-    Sentry.init({ dsn: "https://85580c27547fda592515c27df37d235b@o4509099508432896.ingest.de.sentry.io/4509106618040400" });
-    const app = express();
-    dbConnect();
-    
     dotenv.config();
-    const PORT = process.env.PORT;
+    Sentry.init({ dsn: process.env.SENTRY_DSN });
+    const app = express();
+    connectDB();
     
+    const PORT = process.env.PORT;
     const __filename = fileURLToPath(import.meta.url);
     const __dirname = path.dirname(__filename);
     
     app.use(express.json());
-    
     app.use(express.static(path.join(__dirname, '../public')));
     app.use(express.static(path.join(__dirname, '../dist')));
     
@@ -46,5 +44,5 @@ if (cluster.isPrimary) {
     app.use(postErrorHandler);
     app.use(globalErrorHandler);
     
-    app.listen(PORT, () => logger.info(`Serwer uruchomiony na porcie ${PORT}`));
+    app.listen(PORT, () => logger.info(`Server is running on port ${PORT}`));
 }

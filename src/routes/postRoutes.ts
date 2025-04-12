@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { getPostsController, getPostController, createPostController, updatePostController, deletePostController } from '../controllers/postController.js'; 
-import { verifyToken } from '../middlewares/jwt.js';
+import { verifyToken } from '../middlewares/jwtHandler.js';
 
 const router = Router();
 

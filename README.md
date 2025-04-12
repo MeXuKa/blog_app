@@ -36,6 +36,7 @@ npm install
 PORT=3000
 MONGODB_URI="mongodb://localhost:27017/blog-db"
 SECRET_SIGN="secret_sign"
+SENTRY_DSN="https://00000000000000000000000000000000000000000000000000.ingest.de.sentry.io/0000000000000000"
 ```
 
 4. Run the development server:
@@ -88,6 +89,6 @@ This project is licensed under the **MIT License**.
 ## 👤 Author
 
 **MeXuKa**
-GitHub: [https://github.com/mexuka](https://github.com/mexuka)
+[https://github.com/mexuka](https://github.com/mexuka)
 
 ---
