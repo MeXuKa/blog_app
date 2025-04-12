@@ -1,14 +1,12 @@
 import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
 import { Request, Response, NextFunction } from 'express';
 import logger from '../utils/logger.js';
+import Config from '../config/config.js';
 
-dotenv.config();
-
-const SECRET_SIGN = process.env.SECRET_SIGN;
+const SECRET_SIGN = Config.getConfig().SECRET_SIGN;
 
 if (!SECRET_SIGN) {
-    logger.error('Missing authentication token');
+    logger.error('SECRET_SIGN is not defined');
     process.exit(1);
 }
 
