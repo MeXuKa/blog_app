@@ -82,7 +82,7 @@ Currently under **active development**. Core functionality is being implemented 
 
 ## 📃 License
 
-This project is licensed under the **MIT License**.
+This project is licensed under the **ISC License**.
 
 ---
 

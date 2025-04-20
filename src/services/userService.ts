@@ -15,8 +15,17 @@ export const createUserDb = async (username: string, email: string, password: st
 export const checkUserDb = async (email: string, password: string) => {
     const user = await User.findOne({ email });
 
-    if (!user) return;
-    if (user.password !== password) return;
+    if (!user) {
+        const err = new Error('User not found.');
+        (err as any).status = 404;
+        throw err;
+    }
+    
+    if (user.password !== password) {
+        const err = new Error('Invalid password.');
+        (err as any).status = 401;
+        throw err;
+    }
     
     return user;
 }

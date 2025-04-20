@@ -8,10 +8,11 @@ export interface PostInterface extends Document {
 }
 
 const postSchema = new mongoose.Schema<PostInterface>({
-    title: { type: String, required: true },
-    body: { type: String, required: true },
-    createdAt: { type: Date, default: Date.now, required: true },
+    title: { type: String, required: [true, 'Please add a title'] },
+    body: { type: String, required: [true, 'Please add a body'] },
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true}
+}, {
+    timestamps: true
 });
 
 postSchema.index({ userId: 1 });

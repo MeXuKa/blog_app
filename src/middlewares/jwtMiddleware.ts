@@ -6,7 +6,7 @@ import Config from '../config/config.js';
 const SECRET_SIGN = Config.getConfig().SECRET_SIGN;
 
 if (!SECRET_SIGN) {
-    logger.error('SECRET_SIGN is not defined');
+    logger.error('SECRET_SIGN is not defined.');
     process.exit(1);
 }
 
@@ -18,10 +18,14 @@ export const verifyToken = (req: Request, res: Response, next: NextFunction) => 
     try {
         const token = req.header('Authorization')?.split(' ')[1];
 
-        if (!token) return;
+        if (!token) {
+            const err = new Error('Authorization token is missing.');
+            (err as any).status = 401;
+            throw err;
+        }
         
         const decoded = jwt.verify(token, SECRET_SIGN);
-        (res as any).decodedToken = decoded;
+        (req as any).decodedToken = decoded;
 
         next();
     } catch (err) {
