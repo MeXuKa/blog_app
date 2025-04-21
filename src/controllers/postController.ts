@@ -16,6 +16,13 @@ export const getPostsController = async (req: Request, res: Response, next: Next
         }
 
         const id = req.params.id;
+
+        if (!id || typeof id !== 'string') {
+            const err = new Error('Missing or invalid post ID.');
+            (err as any).status = 400;
+            throw err;
+        }
+
         const posts = await getPostsDb(id);
     
         if (!posts) {
@@ -44,15 +51,23 @@ export const getPostController = async (req: Request, res: Response, next: NextF
             throw err;
         }
 
-        const post = await getPostDb(decodedToken.userId);
+        const id = req.params.id;
+
+        if (!id || typeof id !== 'string') {
+            const err = new Error('Missing or invalid post ID.');
+            (err as any).status = 400;
+            throw err;
+        }
+
+        const post = await getPostDb(id);
 
         if (!post) {
-            const err = new Error('User not found.');
+            const err = new Error('Post not found.');
             (err as any).status = 404;
             throw err;
         }
 
-        logger.info(`Successfully returned post with id ${decodedToken.userId}`);
+        logger.info(`Successfully returned post with id ${id}`);
         res.status(200).json(post);
     } catch (err) {
         next(err);
@@ -60,7 +75,7 @@ export const getPostController = async (req: Request, res: Response, next: NextF
 }
 
 // @desc    Create post
-// @route   POST /api/posts/register
+// @route   POST /api/posts
 // @access  Private
 export const createPostController = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -73,10 +88,17 @@ export const createPostController = async (req: Request, res: Response, next: Ne
         }
 
         const { title, body } = req.body;
+
+        if (!title || !body || typeof title !== 'string' || typeof body !== 'string') {
+            const err = new Error('Title and body are required.');
+            (err as any).status = 400;
+            throw err;
+        }
+
         const post = await createPostDb(title, body, decodedToken.userId);
 
         if (!post) {
-            const err = new Error('User registration failed.');
+            const err = new Error('Post creation failed.');
             (err as any).status = 500;
             throw err;
         }
@@ -102,15 +124,30 @@ export const updatePostController = async (req: Request, res: Response, next: Ne
         }
 
         const data = req.body;
-        const post = await updatePostDb(decodedToken.userId, data);
+        
+        if (!data.title || !data.body || typeof data.title !== 'string' || typeof data.body !== 'string') {
+            const err = new Error('Request body is required.');
+            (err as any).status = 400;
+            throw err;
+        }
+
+        const id = req.params.id;
+
+        if (!id || typeof id !== 'string') {
+            const err = new Error('Missing or invalid post ID.');
+            (err as any).status = 400;
+            throw err;
+        }
+
+        const post = await updatePostDb(id, data);
 
         if (!post) {
-            const err = new Error('User update failed.');
+            const err = new Error('Post update failed.');
             (err as any).status = 500;
             throw err;
         }
 
-        logger.info(`Successfully updated post with id ${decodedToken.userId}`);
+        logger.info(`Successfully updated post with id ${id}`);
         res.status(200).json(post);
     } catch (err) {
         next(err);
@@ -130,10 +167,18 @@ export const deletePostController = async (req: Request, res: Response, next: Ne
             throw err;
         }
 
-        await deletePostDb(decodedToken.userId);
+        const id = req.params.id;
 
-        logger.info(`Successfully deleted post with id ${decodedToken.userId}`);
-        res.status(200).json({ message: `Post with id ${decodedToken.userId} has been deleted` });
+        if (!id || typeof id !== 'string') {
+            const err = new Error('Missing or invalid post ID.');
+            (err as any).status = 400;
+            throw err;
+        }
+
+        await deletePostDb(id);
+
+        logger.info(`Successfully deleted post with id ${id}`);
+        res.status(200).json({ message: `Post with id ${id} has been deleted` });
     } catch (err) {
         next(err);
     }

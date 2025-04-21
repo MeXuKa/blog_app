@@ -65,6 +65,13 @@ export const getUserController = async (req: Request, res: Response, next: NextF
 export const createUserController = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { username, email, password } = req.body;
+
+        if (!username || !email || !password || typeof username !== 'string' || typeof email !== 'string' || typeof password !== 'string') {
+            const err = new Error('Username, email and password are required.');
+            (err as any).status = 400;
+            throw err;
+        }
+
         const user = await createUserDb(username, email, password);
     
         if (!user) {
@@ -88,8 +95,15 @@ export const createUserController = async (req: Request, res: Response, next: Ne
 export const checkUserController = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { email, password } = req.body;
+
+        if (!email || !password || typeof email !== 'string' || typeof password !== 'string') {
+            const err = new Error('Email and password are required.');
+            (err as any).status = 400;
+            throw err;
+        }
+
         const user = await checkUserDb(email, password);
-        
+
         if (!user) {
             const err = new Error('Invalid email or password.');
             (err as any).status = 401;
@@ -119,6 +133,13 @@ export const updateUserController = async (req: Request, res: Response, next: Ne
         }
 
         const data = req.body;
+
+        if (!data.username || !data.password || !data.email  || typeof data.username !== 'string' || typeof data.password !== 'string' || typeof data.email !== 'string') {
+            const err = new Error('Request body is required.');
+            (err as any).status = 400;
+            throw err;
+        }
+
         const user = await updateUserDb(decodedToken.userId, data);
 
         if (!user) {
