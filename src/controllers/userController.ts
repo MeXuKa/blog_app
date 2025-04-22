@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { getUsersDb, getUserDb, createUserDb, checkUserDb, updateUserDb, deleteUserDb } from '../services/userService.js';
 import logger from '../utils/logger.js'; 
 import { generateToken } from '../middlewares/jwtMiddleware.js';
+import bcrypt from 'bcryptjs';
 
 // @desc    Get users
 // @route   GET /api/users
@@ -72,7 +73,10 @@ export const createUserController = async (req: Request, res: Response, next: Ne
             throw err;
         }
 
-        const user = await createUserDb(username, email, password);
+        const salt: string = await bcrypt.genSalt(10);
+        const hashedPassword: string = await bcrypt.hash(password, salt);
+
+        const user = await createUserDb(username, email, hashedPassword);
     
         if (!user) {
             const err = new Error('User registration failed.');
@@ -80,7 +84,7 @@ export const createUserController = async (req: Request, res: Response, next: Ne
             throw err;
         }
 
-        const token: string = generateToken(user.id);
+        const token: string = generateToken(user.id, user.role);
 
         logger.info(`Successfully created user`);
         res.status(201).json({ user, token });
@@ -110,7 +114,7 @@ export const checkUserController = async (req: Request, res: Response, next: Nex
             throw err;
         }
         
-        const token: string = generateToken(user.id);
+        const token: string = generateToken(user.id, user.role);
 
         logger.info(`Successfully logged in the user`);
         res.status(200).json({ user, token });

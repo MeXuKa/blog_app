@@ -10,8 +10,8 @@ if (!SECRET_SIGN) {
     process.exit(1);
 }
 
-export const generateToken = (userId: string): string => {
-    return jwt.sign({ userId }, SECRET_SIGN, { expiresIn: '1h' });
+export const generateToken = (userId: string, userRole: 'user' | 'admin'): string => {
+    return jwt.sign({ userId, userRole }, SECRET_SIGN, { expiresIn: '1h' });
 }
 
 export const verifyToken = (req: Request, res: Response, next: NextFunction) => {

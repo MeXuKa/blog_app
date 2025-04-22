@@ -1,3 +1,4 @@
+import bcrypt from 'bcryptjs';
 import { User, UserInterface } from '../models/userModel.js';
 
 export const getUsersDb = async () => {
@@ -9,7 +10,7 @@ export const getUserDb = async (id: string) => {
 }
 
 export const createUserDb = async (username: string, email: string, password: string) => {
-    return await User.create({ username, password, email});
+    return await User.create({ username, email, password, role: 'user' });
 }
 
 export const checkUserDb = async (email: string, password: string) => {
@@ -21,7 +22,7 @@ export const checkUserDb = async (email: string, password: string) => {
         throw err;
     }
     
-    if (user.password !== password) {
+    if (!await bcrypt.compare(password, user.password)) {
         const err = new Error('Invalid password.');
         (err as any).status = 401;
         throw err;
@@ -31,6 +32,11 @@ export const checkUserDb = async (email: string, password: string) => {
 }
 
 export const updateUserDb = async (id: string, data: Partial<UserInterface>) => {
+    if (data.password) {
+        const salt: string = await bcrypt.genSalt(10);
+        data.password = await bcrypt.hash(data.password, salt);
+    }
+
     return await User.findByIdAndUpdate(id, data, { new: true }).explain('executionStats');
 }
 
