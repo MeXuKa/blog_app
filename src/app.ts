@@ -6,7 +6,6 @@ import express from 'express';
 import Database from './config/database.js'; 
 import logger from './utils/logger.js';
 import cluster from 'cluster';
-import os from 'os';
 import { fileURLToPath } from 'url';
 import path from 'path';
 import userRoutes from './routes/userRoutes.js';
@@ -15,9 +14,7 @@ import weatherRoutes from './routes/weatherRoutes.js';
 import globalErrorHandler from './middlewares/errorMiddleware.js';
 
 if (cluster.isPrimary) {
-    const numCpus = os.cpus().length;
-
-    for (let i = 0; i < numCpus; i++) {
+    for (let i = 0; i < 1; i++) {
         cluster.fork();
     }
 
