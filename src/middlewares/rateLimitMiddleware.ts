@@ -11,7 +11,7 @@ const rateLimitMiddleware = async (req: any, res: any, next: any) => {
 
         next();
     } catch (err) {
-        res.status(429).json({ error: 'Too many requests. Please try again later' });
+        res.status(429).json({ error: 'Too many requests.' });
     }
 }
 

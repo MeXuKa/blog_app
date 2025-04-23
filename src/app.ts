@@ -11,6 +11,7 @@ import { fileURLToPath } from 'url';
 import path from 'path';
 import userRoutes from './routes/userRoutes.js';
 import postRoutes from './routes/postRoutes.js';
+import weatherRoutes from './routes/weatherRoutes.js';
 import globalErrorHandler from './middlewares/errorMiddleware.js';
 
 if (cluster.isPrimary) {
@@ -44,6 +45,7 @@ if (cluster.isPrimary) {
     
     app.use('/api/users', userRoutes);
     app.use('/api/posts', postRoutes);
+    app.use('/api/weather', weatherRoutes);
     
     Sentry.setupExpressErrorHandler(app);
     app.use(globalErrorHandler);

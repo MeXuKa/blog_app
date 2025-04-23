@@ -7,6 +7,7 @@ interface ConfigInterface {
     MONGODB_URI: string | undefined;
     SECRET_SIGN: string | undefined;
     SENTRY_DSN: string | undefined;
+    OPENWEATHER_API_KEY: string | undefined;
 }
 
 class Config {
@@ -18,7 +19,8 @@ class Config {
             PORT: process.env.PORT,
             MONGODB_URI: process.env.MONGODB_URI,
             SECRET_SIGN: process.env.SECRET_SIGN,
-            SENTRY_DSN: process.env.SENTRY_DSN
+            SENTRY_DSN: process.env.SENTRY_DSN,
+            OPENWEATHER_API_KEY: process.env.OPENWEATHER_API_KEY
         }
     }
 
