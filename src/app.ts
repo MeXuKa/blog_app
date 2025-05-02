@@ -2,7 +2,9 @@ import * as Sentry from '@sentry/node';
 import Config from './config/config.js';
 import helmet from 'helmet';
 import rateLimitMiddleware from './middlewares/rateLimitMiddleware.js';
+import cors from 'cors';
 import express from 'express';
+import promBundle from 'express-prom-bundle';
 import Database from './config/database.js'; 
 import logger from './utils/logger.js';
 import cluster from 'cluster';
@@ -30,6 +32,26 @@ if (cluster.isPrimary) {
     const PORT = Config.getConfig().PORT || 5000;
     const __filename = fileURLToPath(import.meta.url);
     const __dirname = path.dirname(__filename);
+    
+    const metricsMiddleware = promBundle({ includeMethod: true, includePath: true });
+    const allowedOrigins = ['http://localhost:5000'];
+
+    const corsOptions: cors.CorsOptions = {
+        origin: (origin, callback) => {
+            if (!origin) {
+                return callback(null, true);
+            }
+
+            if (allowedOrigins.includes(origin)) {
+                return callback(null, true);
+            } else {
+                return callback(new Error('Not allowed by CORS.'));
+            }
+        }
+    };
+
+    app.use(metricsMiddleware);
+    app.use(cors(corsOptions));
     
     app.use(helmet());
     app.use(rateLimitMiddleware);

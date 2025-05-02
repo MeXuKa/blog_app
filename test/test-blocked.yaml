@@ -1,0 +1,11 @@
+config:
+  target: "http://13.50.237.42:8000"
+  phases:
+    - duration: 10
+      arrivalRate: 1
+  headers:
+    origin: "http://localhost:3000"
+scenarios:
+  - flow:
+      - get:
+          url: "/api/posts"
