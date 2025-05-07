@@ -23,6 +23,7 @@
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.13.2",
+    "multer": "^1.4.5-lts.2",
     "rate-limiter-flexible": "^7.0.0",
     "redis": "^5.0.1",
     "winston": "^3.17.0"
@@ -35,6 +36,7 @@
     "@types/jsonwebtoken": "^9.0.9",
     "@types/mocha": "^10.0.10",
     "@types/mongoose": "^5.11.96",
+    "@types/multer": "^1.4.12",
     "@types/sinon": "^17.0.4",
     "@types/supertest": "^6.0.3",
     "artillery": "^2.0.22",
