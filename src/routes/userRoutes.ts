@@ -3,7 +3,7 @@ import { getUsersController, getUserController, createUserController, checkUserC
 import { verifyToken } from '../middlewares/jwtMiddleware.js';
 import { authorizeRole } from '../middlewares/roleMiddleware.js';
 
-const router = Router();
+const router: Router = Router();
 
 router.post('/register', createUserController);
 

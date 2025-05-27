@@ -1,35 +1,23 @@
 import { Request, Response, NextFunction } from 'express';
 import { getPostsDb, getPostDb, createPostDb, updatePostDb, deletePostDb } from '../services/postService.js';
 import logger from '../utils/logger.js'; 
+import AppError from '../utils/appError.js';
+import AppRequest from '../utils/appRequest.js';
 
 // @desc    Get posts
 // @route   GET /api/posts
 // @access  Private
-export const getPostsController = async (req: Request, res: Response, next: NextFunction) => {
+export const getPostsController = async (req: AppRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
-        const { decodedToken } = req as any;
+        if (!req.decodedToken) throw new AppError('Authorization failed. Token missing.', 401);
 
-        if (!decodedToken) {
-            const err = new Error('Authorization failed. Token missing.');
-            (err as any).status = 401;
-            throw err;
-        }
+        const { id } = req.params;
 
-        const id = req.params.id;
-
-        if (!id || typeof id !== 'string') {
-            const err = new Error('Missing or invalid post ID.');
-            (err as any).status = 400;
-            throw err;
-        }
+        if (!id || typeof id !== 'string') throw new AppError('Missing or invalid post ID.', 400);
 
         const posts = await getPostsDb(id);
     
-        if (!posts) {
-            const err = new Error('No posts found.');
-            (err as any).status = 404;
-            throw err;
-        }
+        if (!posts) throw new AppError('No posts found.', 404);
 
         logger.info(`Successfully returned posts`);
         res.status(200).json(posts);
@@ -41,31 +29,17 @@ export const getPostsController = async (req: Request, res: Response, next: Next
 // @desc    Get post
 // @route   GET /api/posts/:id
 // @access  Private
-export const getPostController = async (req: Request, res: Response, next: NextFunction) => {
+export const getPostController = async (req: AppRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
-        const { decodedToken } = req as any;
+        if (!req.decodedToken) throw new AppError('Authorization failed. Token missing.', 401);
 
-        if (!decodedToken) {
-            const err = new Error('Authorization failed. Token missing.');
-            (err as any).status = 401;
-            throw err;
-        }
+        const { id } = req.params;
 
-        const id = req.params.id;
-
-        if (!id || typeof id !== 'string') {
-            const err = new Error('Missing or invalid post ID.');
-            (err as any).status = 400;
-            throw err;
-        }
+        if (!id || typeof id !== 'string') throw new AppError('Missing or invalid post ID.', 400);
 
         const post = await getPostDb(id);
 
-        if (!post) {
-            const err = new Error('Post not found.');
-            (err as any).status = 404;
-            throw err;
-        }
+        if (!post) throw new AppError('Post not found.', 404);
 
         logger.info(`Successfully returned post with id ${id}`);
         res.status(200).json(post);
@@ -77,31 +51,18 @@ export const getPostController = async (req: Request, res: Response, next: NextF
 // @desc    Create post
 // @route   POST /api/posts
 // @access  Private
-export const createPostController = async (req: Request, res: Response, next: NextFunction) => {
+export const createPostController = async (req: AppRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
-        const { decodedToken } = req as any;
-
-        if (!decodedToken) {
-            const err = new Error('Authorization failed. Token missing.');
-            (err as any).status = 401;
-            throw err;
-        }
+        if (!req.decodedToken) throw new AppError('Authorization failed. Token missing.', 401);
 
         const { title, body } = req.body;
 
-        if (!title || !body || typeof title !== 'string' || typeof body !== 'string') {
-            const err = new Error('Title and body are required.');
-            (err as any).status = 400;
-            throw err;
-        }
+        if (!title || !body || typeof title !== 'string' || typeof body !== 'string') throw new AppError('Title and body are required.', 400);
 
-        const post = await createPostDb(title, body, decodedToken.userId);
 
-        if (!post) {
-            const err = new Error('Post creation failed.');
-            (err as any).status = 500;
-            throw err;
-        }
+        const post = await createPostDb(title, body, req.decodedToken.userId);
+
+        if (!post) throw new AppError('Post creation failed.', 500);
 
         logger.info(`Successfully created post`);
         res.status(201).json(post);
@@ -113,39 +74,22 @@ export const createPostController = async (req: Request, res: Response, next: Ne
 // @desc    Update post
 // @route   PUT /api/posts/:id
 // @access  Private
-export const updatePostController = async (req: Request, res: Response, next: NextFunction) => {
+export const updatePostController = async (req: AppRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
-        const { decodedToken } = req as any;
+        if (!req.decodedToken) throw new AppError('Authorization failed. Token missing.', 401);
 
-        if (!decodedToken) {
-            const err = new Error('Authorization failed. Token missing.');
-            (err as any).status = 401;
-            throw err;
-        }
-
-        const data = req.body;
+        const { data } = req.body;
         
-        if (!data.title || !data.body || typeof data.title !== 'string' || typeof data.body !== 'string') {
-            const err = new Error('Request body is required.');
-            (err as any).status = 400;
-            throw err;
-        }
+        if (!data.title || !data.body || typeof data.title !== 'string' || typeof data.body !== 'string') 
+            throw new AppError('Request body is required.', 400);
 
-        const id = req.params.id;
+        const { id } = req.params;
 
-        if (!id || typeof id !== 'string') {
-            const err = new Error('Missing or invalid post ID.');
-            (err as any).status = 400;
-            throw err;
-        }
+        if (!id || typeof id !== 'string') throw new AppError('Missing or invalid post ID.', 400);
 
         const post = await updatePostDb(id, data);
 
-        if (!post) {
-            const err = new Error('Post update failed.');
-            (err as any).status = 500;
-            throw err;
-        }
+        if (!post) throw new AppError('Post update failed.', 500);
 
         logger.info(`Successfully updated post with id ${id}`);
         res.status(200).json(post);
@@ -157,23 +101,13 @@ export const updatePostController = async (req: Request, res: Response, next: Ne
 // @desc    Delete post
 // @route   DELETE /api/posts/:id
 // @access  Private
-export const deletePostController = async (req: Request, res: Response, next: NextFunction) => {
+export const deletePostController = async (req: AppRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
-        const { decodedToken } = req as any;
+        if (!req.decodedToken) throw new AppError('Authorization failed. Token missing.', 401);
 
-        if (!decodedToken) {
-            const err = new Error('Authorization failed. Token missing.');
-            (err as any).status = 401;
-            throw err;
-        }
+        const { id } = req.params;
 
-        const id = req.params.id;
-
-        if (!id || typeof id !== 'string') {
-            const err = new Error('Missing or invalid post ID.');
-            (err as any).status = 400;
-            throw err;
-        }
+        if (!id || typeof id !== 'string') throw new AppError('Missing or invalid post ID.', 400);
 
         await deletePostDb(id);
 

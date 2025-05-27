@@ -1,17 +1,18 @@
+import { Request, Response, NextFunction } from 'express';
 import { RateLimiterMemory } from 'rate-limiter-flexible';
 
-const rateLimiter = new RateLimiterMemory({
+const rateLimiter: RateLimiterMemory = new RateLimiterMemory({
     points: 5,
     duration: 60
 });
 
-const rateLimitMiddleware = async (req: any, res: any, next: any) => {
+const rateLimitMiddleware = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-        await rateLimiter.consume(req.ip);
+        await rateLimiter.consume(req.ip || 'unknown-ip');
 
         next();
     } catch (err) {
-        res.status(429).json({ error: 'Too many requests.' });
+        next(err);
     }
 }
 

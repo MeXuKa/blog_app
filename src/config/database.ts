@@ -4,7 +4,7 @@ import Config from './config.js';
 
 class Database {
     private static instance: Database;
-    private isConnected = false;
+    private isConnected: boolean = false;
 
     private constructor() {}
 

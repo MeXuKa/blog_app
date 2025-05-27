@@ -1,16 +1,15 @@
-import mongoose, { Document } from 'mongoose';
+import mongoose, { Schema, Types } from 'mongoose';
 
-export interface PostInterface extends Document {
+export interface PostInterface {
     title: string,
     body: string,
-    createdAt: Date,
-    userId: mongoose.Schema.Types.ObjectId
+    userId: Types.ObjectId
 }
 
-const postSchema = new mongoose.Schema<PostInterface>({
+const postSchema = new Schema<PostInterface>({
     title: { type: String, required: [true, 'Please add a title'] },
     body: { type: String, required: [true, 'Please add a body'] },
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true}
+    userId: { type: Schema.Types.ObjectId, ref: 'User', required: true}
 }, {
     timestamps: true
 });

@@ -1,5 +1,6 @@
 import bcrypt from 'bcryptjs';
 import { User, UserInterface } from '../models/userModel.js';
+import AppError from '../utils/appError.js';
 
 export const getUsersDb = async () => {
     return await User.find().explain('executionStats');
@@ -16,17 +17,8 @@ export const createUserDb = async (username: string, email: string, password: st
 export const checkUserDb = async (email: string, password: string) => {
     const user = await User.findOne({ email });
 
-    if (!user) {
-        const err = new Error('User not found.');
-        (err as any).status = 404;
-        throw err;
-    }
-    
-    if (!await bcrypt.compare(password, user.password)) {
-        const err = new Error('Invalid password.');
-        (err as any).status = 401;
-        throw err;
-    }
+    if (!user) throw new AppError('User not found.', 404);
+    if (!await bcrypt.compare(password, user.password)) throw new AppError('Invalid password.', 401);
     
     return user;
 }

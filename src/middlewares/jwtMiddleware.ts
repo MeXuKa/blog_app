@@ -2,6 +2,8 @@ import jwt from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
 import logger from '../utils/logger.js';
 import Config from '../config/config.js';
+import AppError from '../utils/appError.js';
+import AppRequest from '../utils/appRequest.js';
 
 const SECRET_SIGN = Config.getConfig().SECRET_SIGN;
 
@@ -14,18 +16,14 @@ export const generateToken = (userId: string, userRole: 'user' | 'admin'): strin
     return jwt.sign({ userId, userRole }, SECRET_SIGN, { expiresIn: '1h' });
 }
 
-export const verifyToken = (req: Request, res: Response, next: NextFunction) => {
+export const verifyToken = (req: AppRequest, res: Response, next: NextFunction): void => {
     try {
         const token = req.header('Authorization')?.split(' ')[1];
 
-        if (!token) {
-            const err = new Error('Authorization token is missing.');
-            (err as any).status = 401;
-            throw err;
-        }
+        if (!token) throw new AppError('Authorization token is missing.', 401);
         
         const decoded = jwt.verify(token, SECRET_SIGN);
-        (req as any).decodedToken = decoded;
+        req.decodedToken = decoded as AppRequest['decodedToken'];
 
         next();
     } catch (err) {

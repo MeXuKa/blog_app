@@ -1,17 +1,17 @@
-import mongoose from 'mongoose';
+import { Types } from 'mongoose';
 import { Post, PostInterface } from '../models/postModel.js';
 
 export const getPostsDb = async (id?: string) => {
     if (id) {
         const posts = await Post.aggregate([
-            { $match: {userId: new mongoose.Types.ObjectId(id) } },
+            { $match: {userId: new Types.ObjectId(id) } },
             { $sort: { createdAt: -1 } },
             { $lookup: { from: 'users', localField: 'userId', foreignField: '_id', as: 'user' } },
             { $unwind: '$user' },
             { $project: { title: 1, body: 1, createdAt: 1, username: '$user.username' } }
         ]).explain('executionStats');
         
-        const count = posts.length;
+        const count: number = posts.length;
     
         return { posts, count };
     }
@@ -23,7 +23,7 @@ export const getPostDb = async (id: string) => {
     return await Post.findById(id).populate('userId', 'username').explain('executionStats');
 }
 
-export const createPostDb = async (title: string, body: string, userId: mongoose.Schema.Types.ObjectId) => {
+export const createPostDb = async (title: string, body: string, userId: string) => {
     return await Post.create({ title, body, userId});
 }
 

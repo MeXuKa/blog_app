@@ -1,6 +1,9 @@
 import logger from '../utils/logger.js';
 import Config from '../config/config.js';
 import { Request, Response, NextFunction } from 'express';
+import AppRequest from '../utils/appRequest.js';
+import AppError from '../utils/appError.js';
+import OpenWeatherData from '../utils/openWeather.js';
 
 const OPENWEATHER_API_KEY = Config.getConfig().OPENWEATHER_API_KEY;
 
@@ -9,27 +12,16 @@ if (!OPENWEATHER_API_KEY) {
     process.exit(1);
 }
 
-export const getWeatherController = async (req: Request, res: Response, next: NextFunction) => {
+export const getWeatherController = async (req: AppRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
-        const { decodedToken } = req as any;
-    
-        if (!decodedToken) {
-            const err = new Error('Authorization failed. Token missing.');
-            (err as any).status = 401;
-            throw err;
-        }
+        if (!req.decodedToken) throw new AppError('Authorization failed. Token missing.', 401);
         
-        const city: string = (req as any).query.city || 'London';
-    
+        const city: string = (req.query.city as string) || 'London';
         const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&lang=en&appid=${OPENWEATHER_API_KEY}`);
 
-        if (!response.ok) {
-            const err = new Error('Error while fetching weather data.');
-            (err as any).status = response.status;
-            throw err;
-        }
+        if (!response.ok) throw new AppError('Error while fetching weather data.', response.status);
 
-        const data = await response.json();
+        const data: OpenWeatherData = await response.json();
 
         res.json({
             location: data.name,

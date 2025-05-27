@@ -5,7 +5,7 @@ import logger from './utils/logger.js';
 if (cluster.isPrimary) {
     logger.info(`Primary worker ${process.pid} is running`);
 
-    const numCPUs = os.cpus().length;
+    const numCPUs: number = os.cpus().length;
 
     for (let i = 0; i < 1; i++) {
         cluster.fork();
