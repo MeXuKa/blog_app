@@ -1,10 +1,10 @@
-import { Request, Response, NextFunction } from 'express';
+import { Response, NextFunction } from 'express';
 import { getUsersDb, getUserDb, createUserDb, checkUserDb, updateUserDb, deleteUserDb } from '../services/userService.js';
 import logger from '../utils/logger.js'; 
 import { generateToken } from '../middlewares/jwtMiddleware.js';
 import bcrypt from 'bcryptjs';
-import AppRequest from '../utils/appRequest.js';
 import AppError from '../utils/appError.js';
+import AppRequest from '../utils/appRequest.js';
 
 // @desc    Get users
 // @route   GET /api/users
@@ -52,9 +52,8 @@ export const createUserController = async (req: AppRequest, res: Response, next:
         if (!username || !email || !password || typeof username !== 'string' || typeof email !== 'string' || typeof password !== 'string') 
             throw new AppError('Username, email and password are required.', 400);
 
-        const salt: string = await bcrypt.genSalt(10);
-        const hashedPassword: string = await bcrypt.hash(password, salt);
-
+        const hashedPassword: string = await bcrypt.hash(password, 10);
+        
         const user = await createUserDb(username, email, hashedPassword);
     
         if (!user) throw new AppError('User registration failed.', 500);

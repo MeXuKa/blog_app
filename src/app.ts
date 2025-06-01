@@ -1,13 +1,12 @@
 import * as Sentry from '@sentry/node';
+import express, { Application } from 'express';
+import Database from './config/database.js'; 
 import Config from './config/config.js';
 import helmet from 'helmet';
 import rateLimitMiddleware from './middlewares/rateLimitMiddleware.js';
 import cors from 'cors';
-import express, { Application } from 'express';
-import promBundle from 'express-prom-bundle';
 import corsOptions from './utils/corsOptions.js';
-import Database from './config/database.js'; 
-import logger from './utils/logger.js';
+import promBundle from 'express-prom-bundle';
 import { fileURLToPath } from 'url';
 import path from 'path';
 import userRoutes from './routes/userRoutes.js';
@@ -20,7 +19,6 @@ Sentry.init({ dsn: Config.getConfig().SENTRY_DSN });
 const app: Application = express();
 Database.connectDB();
 
-const PORT: string = Config.getConfig().PORT || '5000';
 const __filename: string = fileURLToPath(import.meta.url);
 const __dirname: string = path.dirname(__filename);
 const metricsMiddleware: promBundle.Middleware = promBundle({ includeMethod: true, includePath: true });
@@ -43,4 +41,4 @@ app.use('/api/weather', weatherRoutes);
 Sentry.setupExpressErrorHandler(app);
 app.use(globalErrorHandler);
 
-app.listen(PORT, () => logger.info(`Server is running on port ${PORT}`));
+export default app;

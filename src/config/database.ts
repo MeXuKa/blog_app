@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
-import logger from '../utils/logger.js';
 import Config from './config.js';
+import logger from '../utils/logger.js';
 
 class Database {
     private static instance: Database;
@@ -32,9 +32,10 @@ class Database {
         try {
             await mongoose.connect(MONGODB_URI);
             this.isConnected = true;
-            logger.info(`Successfully connected to the database.`);
+            logger.info('Successfully connected to the database.');
         } catch (err) {
-            logger.error(`Failed to connect to the database.`);
+            logger.error('Failed to connect to the database.');
+            process.exit(1);
         }
     }
 }

@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import { Response, NextFunction } from "express";
 import AppError from "../utils/appError.js";
 import AppRequest from "../utils/appRequest.js";
 

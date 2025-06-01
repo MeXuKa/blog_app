@@ -18,5 +18,5 @@ if (cluster.isPrimary) {
 } else {
     logger.info(`Worker ${process.pid} is running`);
     
-    import('./app.js');
+    import('./server.js');
 }

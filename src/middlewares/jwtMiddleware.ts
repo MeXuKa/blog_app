@@ -1,7 +1,7 @@
-import jwt from 'jsonwebtoken';
-import { Request, Response, NextFunction } from 'express';
-import logger from '../utils/logger.js';
+import { Response, NextFunction } from 'express';
 import Config from '../config/config.js';
+import logger from '../utils/logger.js';
+import jwt from 'jsonwebtoken';
 import AppError from '../utils/appError.js';
 import AppRequest from '../utils/appRequest.js';
 

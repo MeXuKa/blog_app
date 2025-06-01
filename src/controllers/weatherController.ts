@@ -1,8 +1,8 @@
-import logger from '../utils/logger.js';
+import { Response, NextFunction } from 'express';
 import Config from '../config/config.js';
-import { Request, Response, NextFunction } from 'express';
-import AppRequest from '../utils/appRequest.js';
+import logger from '../utils/logger.js';
 import AppError from '../utils/appError.js';
+import AppRequest from '../utils/appRequest.js';
 import OpenWeatherData from '../utils/openWeather.js';
 
 const OPENWEATHER_API_KEY = Config.getConfig().OPENWEATHER_API_KEY;
@@ -12,6 +12,9 @@ if (!OPENWEATHER_API_KEY) {
     process.exit(1);
 }
 
+// @desc    Get weather data
+// @route   GET /api/weather
+// @access  Private
 export const getWeatherController = async (req: AppRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
         if (!req.decodedToken) throw new AppError('Authorization failed. Token missing.', 401);

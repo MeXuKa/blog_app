@@ -24,10 +24,7 @@ export const checkUserDb = async (email: string, password: string) => {
 }
 
 export const updateUserDb = async (id: string, data: Partial<UserInterface>) => {
-    if (data.password) {
-        const salt: string = await bcrypt.genSalt(10);
-        data.password = await bcrypt.hash(data.password, salt);
-    }
+    if (data.password) data.password = await bcrypt.hash(data.password, 10);
 
     return await User.findByIdAndUpdate(id, data, { new: true }).explain('executionStats');
 }

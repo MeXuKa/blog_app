@@ -1,10 +1,13 @@
-import { Request, Response, NextFunction } from "express";
-import AppError from "../utils/appError.js";
+import { Response, NextFunction } from "express";
 import logger from "../utils/logger.js";
+import AppError from "../utils/appError.js";
+import AppRequest from "../utils/appRequest.js";
 import fs from 'fs';
 import path from 'path';
-import AppRequest from "../utils/appRequest.js";
 
+// @desc    Upload file
+// @route   POST /api/files/upload
+// @access  Private
 export const uploadFileController = async (req: AppRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
         if (!req.decodedToken) throw new AppError('Authorization failed. Token missing.', 401);
@@ -17,6 +20,9 @@ export const uploadFileController = async (req: AppRequest, res: Response, next:
     }      
 }
 
+// @desc    Download file
+// @route   GET /api/files/download/:filename
+// @access  Private
 export const downloadFileController = async (req: AppRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
         if (!req.decodedToken) throw new AppError('Authorization failed. Token missing.', 401);

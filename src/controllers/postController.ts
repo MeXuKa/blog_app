@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { Response, NextFunction } from 'express';
 import { getPostsDb, getPostDb, createPostDb, updatePostDb, deletePostDb } from '../services/postService.js';
 import logger from '../utils/logger.js'; 
 import AppError from '../utils/appError.js';
@@ -58,7 +58,6 @@ export const createPostController = async (req: AppRequest, res: Response, next:
         const { title, body } = req.body;
 
         if (!title || !body || typeof title !== 'string' || typeof body !== 'string') throw new AppError('Title and body are required.', 400);
-
 
         const post = await createPostDb(title, body, req.decodedToken.userId);
 
