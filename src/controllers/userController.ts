@@ -2,9 +2,9 @@ import { Response, NextFunction } from 'express';
 import { getUsersDb, getUserDb, createUserDb, checkUserDb, updateUserDb, deleteUserDb } from '../services/userService.js';
 import logger from '../utils/logger.js'; 
 import generateToken from '../utils/signToken.js';
-import bcrypt from 'bcryptjs';
 import AppError from '../utils/appError.js';
 import AppRequest from '../types/AppRequest.js';
+import { checkPassword, hashPassword } from '../utils/password.js';
 
 // @desc    Get users
 // @route   GET /api/users
@@ -51,8 +51,10 @@ export const createUserController = async (req: AppRequest, res: Response, next:
 
         if (!username || !email || !password || typeof username !== 'string' || typeof email !== 'string' || typeof password !== 'string') 
             throw new AppError('Username, email and password are required.', 400);
+        
+        if (!checkPassword(password)) throw new AppError('Password does not meet strength requirements.', 400);
 
-        const hashedPassword: string = await bcrypt.hash(password, 10);
+        const hashedPassword: string = await hashPassword(password);
         
         const user = await createUserDb(username, email, hashedPassword);
     
@@ -101,6 +103,8 @@ export const updateUserController = async (req: AppRequest, res: Response, next:
 
         if (!data.username || !data.password || !data.email  || typeof data.username !== 'string' || typeof data.password !== 'string' || typeof data.email !== 'string') 
             throw new AppError('Request body is required.', 400);
+
+        if (!checkPassword(data.password)) throw new AppError('Password does not meet strength requirements.', 400);
 
         const user = await updateUserDb(req.decodedToken.userId, data);
 

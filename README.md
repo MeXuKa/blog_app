@@ -9,9 +9,9 @@ An early version of a backend-only **Blog App**, built with **Express**, **TypeS
 - **Express**
 - **TypeScript**
 - **MongoDB/Mongoose**
+- **JsonWebToken**
 - **Mocha/Chai**
 - **Winston**
-- **JsonWebToken**
 
 ---
 
