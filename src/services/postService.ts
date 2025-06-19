@@ -1,5 +1,5 @@
 import { Types } from 'mongoose';
-import { Post, PostInterface } from '../models/postModel.js';
+import { Post, PostInterface } from '../models/PostModel.js';
 
 export const getPostsDb = async (id?: string) => {
     if (id) {

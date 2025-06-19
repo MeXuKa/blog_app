@@ -2,7 +2,7 @@ import { Response, NextFunction } from 'express';
 import { getPostsDb, getPostDb, createPostDb, updatePostDb, deletePostDb } from '../services/postService.js';
 import logger from '../utils/logger.js'; 
 import AppError from '../utils/appError.js';
-import AppRequest from '../utils/appRequest.js';
+import AppRequest from '../types/AppRequest.js';
 
 // @desc    Get posts
 // @route   GET /api/posts

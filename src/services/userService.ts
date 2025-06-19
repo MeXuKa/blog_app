@@ -1,5 +1,5 @@
 import bcrypt from 'bcryptjs';
-import { User, UserInterface } from '../models/userModel.js';
+import { User, UserInterface } from '../models/UserModel.js';
 import AppError from '../utils/appError.js';
 
 export const getUsersDb = async () => {

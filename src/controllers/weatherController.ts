@@ -2,8 +2,8 @@ import { Response, NextFunction } from 'express';
 import Config from '../config/config.js';
 import logger from '../utils/logger.js';
 import AppError from '../utils/appError.js';
-import AppRequest from '../utils/appRequest.js';
-import OpenWeatherData from '../utils/openWeather.js';
+import AppRequest from '../types/AppRequest.js';
+import WeatherType from '../types/WeatherType.js';
 
 const OPENWEATHER_API_KEY = Config.getConfig().OPENWEATHER_API_KEY;
 
@@ -24,7 +24,7 @@ export const getWeatherController = async (req: AppRequest, res: Response, next:
 
         if (!response.ok) throw new AppError('Error while fetching weather data.', response.status);
 
-        const data: OpenWeatherData = await response.json();
+        const data: WeatherType = await response.json();
 
         res.json({
             location: data.name,

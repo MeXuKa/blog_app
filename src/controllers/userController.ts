@@ -1,10 +1,10 @@
 import { Response, NextFunction } from 'express';
 import { getUsersDb, getUserDb, createUserDb, checkUserDb, updateUserDb, deleteUserDb } from '../services/userService.js';
 import logger from '../utils/logger.js'; 
-import { generateToken } from '../middlewares/jwtMiddleware.js';
+import generateToken from '../utils/signToken.js';
 import bcrypt from 'bcryptjs';
 import AppError from '../utils/appError.js';
-import AppRequest from '../utils/appRequest.js';
+import AppRequest from '../types/AppRequest.js';
 
 // @desc    Get users
 // @route   GET /api/users
@@ -58,7 +58,7 @@ export const createUserController = async (req: AppRequest, res: Response, next:
     
         if (!user) throw new AppError('User registration failed.', 500);
 
-        const token: string = generateToken(user.id, user.role);
+        const token: string = generateToken({ userId: user.id.toString(), userRole: user.role });
 
         logger.info(`Successfully created user`);
         res.status(201).json({ user, token });
@@ -81,7 +81,7 @@ export const checkUserController = async (req: AppRequest, res: Response, next: 
 
         if (!user) throw new AppError('Invalid email or password.', 401);
         
-        const token: string = generateToken(user.id, user.role);
+        const token: string = generateToken({ userId: user.id.toString(), userRole: user.role });
 
         logger.info(`Successfully logged in the user`);
         res.status(200).json({ user, token });

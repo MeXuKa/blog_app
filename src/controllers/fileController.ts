@@ -1,7 +1,7 @@
 import { Response, NextFunction } from "express";
 import logger from "../utils/logger.js";
 import AppError from "../utils/appError.js";
-import AppRequest from "../utils/appRequest.js";
+import AppRequest from "../types/AppRequest.js";
 import fs from 'fs';
 import path from 'path';
 

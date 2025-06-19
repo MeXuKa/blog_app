@@ -1,10 +1,11 @@
 import mongoose, { Schema } from 'mongoose';
+import RoleType from '../types/RoleType.js';
 
 export interface UserInterface {
     username: string,
     email: string,
     password: string,
-    role: 'user' | 'admin'
+    role: RoleType
 }
 
 const userSchema = new Schema<UserInterface>({

@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { upload } from '../middlewares/uploadMiddleware.js';
 import { uploadFileController, downloadFileController } from '../controllers/fileController.js';
-import { verifyToken } from '../middlewares/jwtMiddleware.js';
+import verifyToken from '../middlewares/jwtMiddleware.js';
 
 const router: Router = Router();
 
