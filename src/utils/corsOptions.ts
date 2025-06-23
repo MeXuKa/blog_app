@@ -1,7 +1,7 @@
 import cors from 'cors';
 import AppError from './appError.js';
 
-const allowedOrigins: string[] = ['http://localhost:5000'];
+const allowedOrigins: string[] = ['http://localhost:5173'];
 
 const corsOptions: cors.CorsOptions = {
     origin: (origin, callback) => {
